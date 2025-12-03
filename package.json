@@ -5,7 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:port": "vite --port",
+    "start": "npm run dev",
+    "auto-start": "powershell -ExecutionPolicy Bypass -File ./scripts/start.ps1",
+    "auto-start-port": "powershell -ExecutionPolicy Bypass -File ./scripts/start.ps1 3000",
     "build": "vite build",
+    "start:prod": "npm run build && npm run preview",
     "lint": "eslint .",
     "preview": "vite preview"
   },

@@ -51,6 +51,54 @@ npm install
 npm run dev
 ```
 
+### Commandes simplifiées
+
+Vous pouvez utiliser ces scripts npm pour démarrer plus facilement :
+
+- Démarrer le serveur de développement (alias) :
+```powershell
+npm start
+```
+
+- Démarrer le serveur de développement sur un port spécifique (PowerShell) :
+```powershell
+$env:PORT=3000; npm run dev
+```
+ou en utilisant le script `dev:port` (remplacer 3000 par le port désiré) :
+```powershell
+npm run dev:port -- 3000
+```
+
+- Construire et prévisualiser la version de production :
+```powershell
+npm run start:prod
+```
+
+### Démarrage automatisé (script)
+
+J'ai ajouté un petit script PowerShell `scripts/start.ps1` et un wrapper batch `scripts/start.bat` pour automatiser l'installation (si nécessaire) et le démarrage.
+
+- Lancer l'automatisation (installe si besoin puis démarre le dev) :
+```powershell
+npm run auto-start
+```
+
+- Lancer l'automatisation sur un port précis (ex. 3000) :
+```powershell
+npm run auto-start -- 3000
+```
+ou directement :
+```powershell
+powershell -ExecutionPolicy Bypass -File ./scripts/start.ps1 3000
+```
+
+Le script fait :
+- vérifie la présence de `node_modules` et exécute `npm install` si nécessaire
+- définit la variable d'environnement `PORT` si un port est fourni
+- lance `npm run dev`
+
+Vous pouvez modifier `scripts/start.ps1` si vous voulez ajouter des étapes (ex : build, tests, lint avant démarrage). 
+
 4. Ouvrez votre navigateur à l'adresse : `http://localhost:5173`
 
 ## 🛠️ Scripts disponibles
