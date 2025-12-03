@@ -1,0 +1,458 @@
+/**
+ * Charte de couleurs Fiery Ocean
+ * #780000 - Rouge foncé
+ * #C1121F - Rouge vif
+ * #FDF0D5 - Beige clair
+ * #003049 - Bleu marine
+ * #669BBC - Bleu clair
+ */
+
+/* Variables CSS pour la charte de couleurs */
+:root {
+  --color-dark-red: #780000;
+  --color-bright-red: #C1121F;
+  --color-light-beige: #FDF0D5;
+  --color-navy: #003049;
+  --color-light-blue: #669BBC;
+
+  /* Couleurs fonctionnelles */
+  --color-primary: var(--color-navy);
+  --color-accent: var(--color-bright-red);
+  --color-background: var(--color-light-beige);
+  --color-text: var(--color-navy);
+  --color-border: var(--color-light-blue);
+}
+
+/* Reset et styles de base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: var(--color-navy);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+/* Conteneur principal */
+.app {
+  width: 100%;
+  max-width: 600px;
+  animation: fadeIn 0.5s ease-in;
+}
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.material-icons {
+  vertical-align: middle;
+  font-size: 1.3em;
+  margin-right: 6px;
+}
+
+.container {
+  background-color: var(--color-background);
+  border-radius: 20px;
+  padding: 12px 56px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+/* En-tête */
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 0.2em;
+  margin-bottom: 0;
+}
+
+.title {
+  font-size: 3rem;
+  color: var(--color-accent);
+  margin-bottom: 10px;
+  font-weight: 700;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align: center;
+}
+
+.subtitle {
+  color: var(--color-primary);
+  font-size: 1.1rem;
+  font-weight: 400;
+  font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align: center;
+}
+
+/* Zone d'affichage du mot de passe */
+.password-display {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  margin-bottom: 0;
+}
+
+.password-input {
+  flex: 1;
+  padding: 15px;
+  font-size: 1.1rem;
+  border: 3px solid var(--color-border);
+  border-radius: 10px;
+  background-color: white;
+  color: var(--color-text);
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.password-input:focus {
+  border-color: var(--color-accent);
+}
+
+.password-input::placeholder {
+  color: #999;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 400;
+}
+
+.copy-btn {
+  padding: 15px 20px;
+  background-color: var(--color-light-blue);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.copy-btn:hover:not(:disabled) {
+  background-color: var(--color-navy);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.copy-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.copy-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.copied-message {
+  text-align: center;
+  color: var(--color-navy);
+  font-weight: 600;
+  margin-bottom: 15px;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Options de génération */
+.options {
+  background-color: white;
+  border-radius: 15px;
+  padding: 20px 18px;
+  margin-bottom: 0;
+  border: 2px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.option-group {
+  margin-bottom: 25px;
+}
+
+.length-label {
+  display: block;
+  font-size: 1.1rem;
+  color: var(--color-primary);
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.length-value {
+  color: var(--color-accent);
+  font-size: 1.3rem;
+  margin-left: 10px;
+}
+
+/* Slider personnalisé */
+.slider {
+  width: 100%;
+  height: 8px;
+  border-radius: 5px;
+  background: var(--color-border);
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--color-navy);
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  background: var(--color-accent);
+}
+
+.slider::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--color-navy);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.slider::-moz-range-thumb:hover {
+  transform: scale(1.2);
+  background: var(--color-accent);
+}
+
+/* Groupe de cases à cocher */
+.checkbox-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 15px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  color: var(--color-text);
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.checkbox-label:hover {
+  background-color: var(--color-light-beige);
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  cursor: pointer;
+  accent-color: var(--color-accent);
+}
+
+.checkbox-label span {
+  user-select: none;
+}
+
+/* Bouton de génération */
+.generate-btn {
+  width: 100%;
+  padding: 16px;
+  background: var(--color-accent);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(193, 18, 31, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 8px;
+}
+
+.generate-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(193, 18, 31, 0.4);
+}
+
+.generate-btn:active {
+  transform: translateY(-1px);
+}
+
+/* Conseils de sécurité */
+.tips {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: white;
+  border-radius: 12px;
+  border-left: 5px solid var(--color-accent);
+}
+
+.tips h3 {
+  color: var(--color-primary);
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+}
+
+.tips ul {
+  list-style: none;
+  padding: 0;
+}
+
+.tips li {
+  color: var(--color-text);
+  padding: 8px 0;
+  padding-left: 25px;
+  position: relative;
+  line-height: 1.6;
+}
+
+.tips li::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: var(--color-accent);
+  font-weight: bold;
+}
+
+/* Responsive Design */
+
+/* Tablettes */
+@media (max-width: 768px) {
+  .container {
+    padding: 30px;
+  }
+
+  .title {
+    font-size: 2.5rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+
+  .password-input {
+    font-size: 1rem;
+  }
+
+  .checkbox-group {
+    grid-template-columns: 1fr;
+  }
+
+  .generate-btn {
+    font-size: 1.1rem;
+  }
+}
+
+/* Mobiles */
+@media (max-width: 480px) {
+  body {
+    padding: 10px;
+  }
+
+  .container {
+    padding: 20px;
+    border-radius: 15px;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .subtitle {
+    font-size: 0.9rem;
+  }
+
+  .password-display {
+    flex-direction: column;
+  }
+
+  .password-input {
+    font-size: 0.95rem;
+    padding: 12px;
+  }
+
+  .copy-btn {
+    width: 100%;
+    padding: 12px;
+  }
+
+  .options {
+    padding: 20px;
+  }
+
+  .checkbox-label {
+    font-size: 0.9rem;
+  }
+
+  .generate-btn {
+    font-size: 1rem;
+    padding: 15px;
+  }
+
+  .tips {
+    padding: 15px;
+  }
+
+  .tips h3 {
+    font-size: 1.1rem;
+  }
+
+  .tips li {
+    font-size: 0.9rem;
+  }
+}
+
+/* Accessibilité - Mode sombre du système */
+@media (prefers-color-scheme: dark) {
+  /* Le design actuel fonctionne bien,
+     mais on peut ajuster si nécessaire */
+}
+
+/* Amélioration des focus pour l'accessibilité au clavier */
+button:focus-visible,
+input:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 2px;
+}
