@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 
 /**
@@ -28,6 +28,48 @@ function App() {
     numbers: '0123456789',
     symbols: '!@#$%^&*()_+-=[]{}|;:,.<>?'
   }
+
+  // Indicateur de force
+  const [strength, setStrength] = useState({ score: 0, label: '', color: '#ddd' })
+
+  const evaluateStrength = (pwd) => {
+    if (!pwd) return { score: 0, label: '', color: '#ddd' }
+    let score = 0
+    // longueur
+    if (pwd.length >= 8) score += 1
+    if (pwd.length >= 12) score += 1
+    // diversité
+    if (/[A-Z]/.test(pwd)) score += 1
+    if (/[a-z]/.test(pwd)) score += 1
+    if (/[0-9]/.test(pwd)) score += 1
+    if (/[!@#$%^&*()_+\-=[\]{}|;:,.<>?]/.test(pwd)) score += 1
+
+    // max score = 6
+    let label = ''
+    let color = '#ddd'
+    if (score <= 1) {
+      label = 'Très faible'
+      color = '#e53935' // rouge
+    } else if (score === 2) {
+      label = 'Faible'
+      color = '#ff7043' // orange
+    } else if (score === 3) {
+      label = 'Moyen'
+      color = '#fbc02d' // jaune
+    } else if (score === 4) {
+      label = 'Bon'
+      color = '#8bc34a' // vert clair
+    } else {
+      label = 'Très bon'
+      color = '#2e7d32' // vert foncé
+    }
+
+    return { score, label, color }
+  }
+
+  useEffect(() => {
+    setStrength(evaluateStrength(password))
+  }, [password])
 
   /**
    * Génère un mot de passe aléatoire basé sur les options sélectionnées
@@ -109,6 +151,15 @@ function App() {
               <span className="material-icons" aria-hidden="true">content_copy</span>
             )}
           </button>
+        </div>
+
+        {/* Indicateur de force */}
+        <div className="strength-meter" aria-hidden={password ? 'false' : 'true'}>
+          <div
+            className="strength-bar"
+            style={{ width: `${(strength.score / 6) * 100}%`, background: strength.color }}
+          />
+          <div className="strength-label">{strength.label}</div>
         </div>
 
         {copied && <p className="copied-message">Mot de passe copié !</p>}
