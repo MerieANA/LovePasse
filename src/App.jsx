@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import './App.css'
 
 /**
@@ -160,8 +161,8 @@ function App() {
           <span className="nav-brand">LovePass</span>
         </div>
         <div className="nav-right">
-          <a href="#" className="nav-link">Accueil</a>
-          <a href="#" className="nav-link">Aide</a>
+          <Link to="/" className="nav-link">Accueil</Link>
+          <Link to="/help" className="nav-link">Aide</Link>
         </div>
       </nav>
 
@@ -214,13 +215,13 @@ function App() {
 
               <div className="strength-tip">
                 {strength.score <= 2 && (
-                  <p className="tip-weak">⚠️ <strong>Très faible :</strong> Augmentez la longueur et variez les types de caractères.</p>
+                  <p className="tip-weak"><strong>Très faible :</strong> Augmentez la longueur et variez les types de caractères.</p>
                 )}
                 {strength.score >= 3 && strength.score < 5 && (
-                  <p className="tip-medium">💡 <strong>Moyen :</strong> Visez au moins 12 caractères avec majuscules, minuscules, chiffres et symboles.</p>
+                  <p className="tip-medium"><strong>Moyen :</strong> Visez au moins 12 caractères avec majuscules, minuscules, chiffres et symboles.</p>
                 )}
                 {strength.score >= 5 && (
-                  <p className="tip-strong">✅ <strong>Excellent :</strong> Ce mot de passe est très sécurisé. Sauvegardez-le dans un gestionnaire!</p>
+                  <p className="tip-strong"><strong>Excellent :</strong> Ce mot de passe est très sécurisé. Sauvegardez-le dans un gestionnaire!</p>
                 )}
               </div>
             </div>
