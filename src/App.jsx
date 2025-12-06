@@ -16,6 +16,7 @@ function App() {
     includeLowercase: true,
     includeNumbers: true,
     includeSymbols: true
+    ,excludeAmbiguous: false
   })
 
   // État pour afficher le message de copie
@@ -30,41 +31,62 @@ function App() {
   }
 
   // Indicateur de force
-  const [strength, setStrength] = useState({ score: 0, label: '', color: '#ddd' })
+  const [strength, setStrength] = useState({
+    score: 0,
+    label: '',
+    color: '#ddd',
+    criteria: {
+      length8: false,
+      length12: false,
+      hasUpper: false,
+      hasLower: false,
+      hasNumber: false,
+      hasSymbol: false
+    }
+  })
 
   const evaluateStrength = (pwd) => {
-    if (!pwd) return { score: 0, label: '', color: '#ddd' }
-    let score = 0
-    // longueur
-    if (pwd.length >= 8) score += 1
-    if (pwd.length >= 12) score += 1
-    // diversité
-    if (/[A-Z]/.test(pwd)) score += 1
-    if (/[a-z]/.test(pwd)) score += 1
-    if (/[0-9]/.test(pwd)) score += 1
-    if (/[!@#$%^&*()_+\-=[\]{}|;:,.<>?]/.test(pwd)) score += 1
+    if (!pwd) return { score: 0, label: '', color: '#ddd', criteria: {} }
 
-    // max score = 6
+    const criteria = {
+      length8: pwd.length >= 8,
+      length12: pwd.length >= 12,
+      hasUpper: /[A-Z]/.test(pwd),
+      hasLower: /[a-z]/.test(pwd),
+      hasNumber: /[0-9]/.test(pwd),
+      hasSymbol: /[!@#$%^&*()_+\-=[\]{}|;:,.<>?]/.test(pwd)
+    }
+
+    let score = 0
+    // points pondérés
+    if (criteria.length8) score += 1
+    if (criteria.length12) score += 1
+    if (criteria.hasUpper) score += 1
+    if (criteria.hasLower) score += 1
+    if (criteria.hasNumber) score += 1
+    if (criteria.hasSymbol) score += 1
+
+    // label & color
     let label = ''
     let color = '#ddd'
     if (score <= 1) {
       label = 'Très faible'
-      color = '#e53935' // rouge
+      color = '#e53935'
     } else if (score === 2) {
       label = 'Faible'
-      color = '#ff7043' // orange
+      color = '#ff7043'
     } else if (score === 3) {
       label = 'Moyen'
-      color = '#fbc02d' // jaune
+      color = '#fbc02d'
     } else if (score === 4) {
       label = 'Bon'
-      color = '#8bc34a' // vert clair
+      color = '#8bc34a'
     } else {
       label = 'Très bon'
-      color = '#2e7d32' // vert foncé
+      color = '#2e7d32'
     }
 
-    return { score, label, color }
+    return { score, label, color, criteria }
   }
 
   useEffect(() => {
@@ -83,6 +105,15 @@ function App() {
     if (options.includeLowercase) charset += characters.lowercase
     if (options.includeNumbers) charset += characters.numbers
     if (options.includeSymbols) charset += characters.symbols
+
+    // Exclure les caractères ambigus si demandé
+    if (options.excludeAmbiguous && charset) {
+      const ambiguous = 'Il1O0oO'
+      charset = charset
+        .split('')
+        .filter((c, i, arr) => !ambiguous.includes(c))
+        .join('')
+    }
 
     // Vérifier qu'au moins une option est sélectionnée
     if (charset === '') {
@@ -123,6 +154,17 @@ function App() {
 
   return (
     <div className="app">
+      <nav className="navbar" role="navigation" aria-label="Barre de navigation">
+        <div className="nav-left">
+          <span className="material-icons nav-logo" aria-hidden="true">favorite</span>
+          <span className="nav-brand">LovePass</span>
+        </div>
+        <div className="nav-right">
+          <a href="#" className="nav-link">Accueil</a>
+          <a href="#" className="nav-link">Aide</a>
+        </div>
+      </nav>
+
       <div className="container">
         {/* En-tête */}
         <header className="header">
@@ -153,19 +195,39 @@ function App() {
           </button>
         </div>
 
-        {/* Indicateur de force */}
-        <div className="strength-meter" aria-hidden={password ? 'false' : 'true'}>
-          <div
-            className="strength-bar"
-            style={{ width: `${(strength.score / 6) * 100}%`, background: strength.color }}
-          />
-          <div className="strength-label">{strength.label}</div>
-        </div>
-
         {copied && <p className="copied-message">Mot de passe copié !</p>}
 
-        {/* Options de génération */}
-        <div className="options">
+        <div className="main-content-row">
+          {/* Indicateur de force */}
+          <div className="strength-meter" aria-hidden={password ? 'false' : 'true'}>
+            <div className="strength-details" aria-live="polite">
+              <div className="strength-criteria-section">
+                <ul>
+                  <li className={strength.criteria.length8 ? 'ok' : 'bad'}>≥ 8 caractères</li>
+                  <li className={strength.criteria.length12 ? 'ok' : 'bad'}>≥ 12 caractères</li>
+                  <li className={strength.criteria.hasUpper ? 'ok' : 'bad'}>Contient une majuscule</li>
+                  <li className={strength.criteria.hasLower ? 'ok' : 'bad'}>Contient une minuscule</li>
+                  <li className={strength.criteria.hasNumber ? 'ok' : 'bad'}>Contient un chiffre</li>
+                  <li className={strength.criteria.hasSymbol ? 'ok' : 'bad'}>Contient un symbole</li>
+                </ul>
+              </div>
+
+              <div className="strength-tip">
+                {strength.score <= 2 && (
+                  <p className="tip-weak">⚠️ <strong>Très faible :</strong> Augmentez la longueur et variez les types de caractères.</p>
+                )}
+                {strength.score >= 3 && strength.score < 5 && (
+                  <p className="tip-medium">💡 <strong>Moyen :</strong> Visez au moins 12 caractères avec majuscules, minuscules, chiffres et symboles.</p>
+                )}
+                {strength.score >= 5 && (
+                  <p className="tip-strong">✅ <strong>Excellent :</strong> Ce mot de passe est très sécurisé. Sauvegardez-le dans un gestionnaire!</p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Options de génération */}
+          <div className="options">
           <div className="option-group">
             <label className="length-label">
               Longueur: <span className="length-value">{options.length}</span>
@@ -216,7 +278,17 @@ function App() {
               />
               <span>Symboles (!@#$...)</span>
             </label>
+
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                checked={options.excludeAmbiguous}
+                onChange={(e) => handleOptionChange('excludeAmbiguous', e.target.checked)}
+              />
+              <span>Exclure caractères ambigus (I, l, 1, O, 0, o)</span>
+            </label>
           </div>
+        </div>
         </div>
 
         {/* Bouton de génération */}

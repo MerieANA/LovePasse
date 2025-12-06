@@ -22,6 +22,7 @@ Le design utilise la palette "Fiery Ocean" :
   - Minuscules (a-z)
   - Chiffres (0-9)
   - Symboles (!@#$...)
+  - Exclusion des caractères ambigus (ex : I, l, 1, O, 0) pour améliorer la lisibilité
 - **Copie rapide** : Bouton pour copier le mot de passe dans le presse-papier
 - **Interface responsive** : Fonctionne parfaitement sur mobile, tablette et desktop
 - **Design moderne** : Interface élégante avec animations fluides
