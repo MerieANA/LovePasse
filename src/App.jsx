@@ -23,6 +23,18 @@ function App() {
   // État pour afficher le message de copie
   const [copied, setCopied] = useState(false)
 
+  // État pour l'historique des mots de passe
+  const [history, setHistory] = useState(() => {
+    const saved = localStorage.getItem('lovepass-history')
+    return saved ? JSON.parse(saved) : []
+  })
+
+  // État pour le mode sombre
+  const [darkMode, setDarkMode] = useState(() => {
+    const saved = localStorage.getItem('lovepass-darkmode')
+    return saved === 'true'
+  })
+
   // Caractères disponibles pour la génération
   const characters = {
     uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
@@ -94,6 +106,21 @@ function App() {
     setStrength(evaluateStrength(password))
   }, [password])
 
+  // Sauvegarder l'historique dans localStorage
+  useEffect(() => {
+    localStorage.setItem('lovepass-history', JSON.stringify(history))
+  }, [history])
+
+  // Sauvegarder le mode sombre dans localStorage et appliquer la classe
+  useEffect(() => {
+    localStorage.setItem('lovepass-darkmode', darkMode)
+    if (darkMode) {
+      document.body.classList.add('dark-mode')
+    } else {
+      document.body.classList.remove('dark-mode')
+    }
+  }, [darkMode])
+
   /**
    * Génère un mot de passe aléatoire basé sur les options sélectionnées
    */
@@ -130,6 +157,47 @@ function App() {
 
     setPassword(generatedPassword)
     setCopied(false)
+
+    // Ajouter à l'historique
+    const newEntry = {
+      id: Date.now(),
+      password: generatedPassword,
+      timestamp: new Date().toLocaleString('fr-FR'),
+      length: generatedPassword.length
+    }
+    setHistory(prev => [newEntry, ...prev].slice(0, 10)) // Garder seulement les 10 derniers
+  }
+
+  /**
+   * Copie un mot de passe de l'historique
+   */
+  const copyFromHistory = (pwd) => {
+    navigator.clipboard.writeText(pwd)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
+  /**
+   * Supprime un élément de l'historique
+   */
+  const deleteFromHistory = (id) => {
+    setHistory(prev => prev.filter(item => item.id !== id))
+  }
+
+  /**
+   * Vide tout l'historique
+   */
+  const clearHistory = () => {
+    if (window.confirm('Voulez-vous vraiment effacer tout l\'historique ?')) {
+      setHistory([])
+    }
+  }
+
+  /**
+   * Bascule le mode sombre
+   */
+  const toggleDarkMode = () => {
+    setDarkMode(prev => !prev)
   }
 
   /**
@@ -163,6 +231,15 @@ function App() {
         <div className="nav-right">
           <Link to="/" className="nav-link">Accueil</Link>
           <Link to="/help" className="nav-link">Aide</Link>
+          <button
+            onClick={toggleDarkMode}
+            className="theme-toggle"
+            title={darkMode ? 'Mode clair' : 'Mode sombre'}
+          >
+            <span className="material-icons" aria-hidden="true">
+              {darkMode ? 'light_mode' : 'dark_mode'}
+            </span>
+          </button>
         </div>
       </nav>
 
@@ -307,6 +384,49 @@ function App() {
             <li>Utilisez un gestionnaire de mots de passe</li>
           </ul>
         </div>
+
+        {/* Historique des mots de passe */}
+        {history.length > 0 && (
+          <div className="history">
+            <div className="history-header">
+              <h3>
+                <span className="material-icons" aria-hidden="true">history</span>
+                Historique (derniers 10)
+              </h3>
+              <button onClick={clearHistory} className="clear-history-btn" title="Effacer l'historique">
+                <span className="material-icons" aria-hidden="true">delete_sweep</span>
+              </button>
+            </div>
+            <div className="history-list">
+              {history.map((item) => (
+                <div key={item.id} className="history-item">
+                  <div className="history-item-content">
+                    <span className="history-password">{item.password}</span>
+                    <span className="history-meta">
+                      {item.length} caractères • {item.timestamp}
+                    </span>
+                  </div>
+                  <div className="history-item-actions">
+                    <button
+                      onClick={() => copyFromHistory(item.password)}
+                      className="history-btn"
+                      title="Copier"
+                    >
+                      <span className="material-icons" aria-hidden="true">content_copy</span>
+                    </button>
+                    <button
+                      onClick={() => deleteFromHistory(item.id)}
+                      className="history-btn delete-btn"
+                      title="Supprimer"
+                    >
+                      <span className="material-icons" aria-hidden="true">delete</span>
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
